@@ -1,9 +1,16 @@
 items:
-  - title: 【示例】图像生成工具新增中文排版能力
+  - title: DeepMind 发布机器人模型 Gemini Robotics 2.5
+    category: 研究
+    summary: 新一代 VLA 模型，在约 200 项任务上评测。几个原本几乎做不成的精细操作进步明显，比如用夹子装取糕点的成功率从 5% 升到 100%。
+    url: http://finance.sina.com.cn/jjxw/2026-11-11/doc-iniyixya8503136.shtml
+    source: 新浪财经
+  - title: ElevenLabs 发布语音转文字模型 Scribe v3
     category: 产品
-    summary: 示例内容。source 字段不填时，会自动显示链接的域名。
-    url: https://example.com/image
-    source: 官方博客
-  - title: 【示例】一份整理得很清楚的提示词写作指南
-    category: 文章
-    url: https://example.org/prompt-guide
+    summary: 覆盖 102 种语言，官方称词错误比上一代少 27%。同时推出低延迟的 Scribe v3 Live，带说话人区分，面向实时对话场景。
+    url: https://elevenlabs.io/blog/scribe-v3
+    source: ElevenLabs
+  - title: 法国专家委员会建议加强生成式 AI 监管
+    category: 动态
+    summary: 报告提交给马克龙，共 18 项建议，其中包括限制模型「奉承迎合」用户的机制，以及上市前做跨学科风险评估。
+    url: http://finance.sina.com.cn/jjxw/2026-11-11/doc-iniyitsa2113318.shtml
+    source: 新浪财经

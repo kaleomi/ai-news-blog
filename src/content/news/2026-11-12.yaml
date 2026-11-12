@@ -1,20 +1,26 @@
 items:
-  - title: 【示例】某实验室发布新一代多模态模型
-    category: 产品
-    summary: 这是一条示例快讯。写一两句话说清楚：发生了什么、为什么值得关注。读者点标题会跳到原文。
-    url: https://example.com/new-model
-  - title: 【示例】一篇关于长上下文推理的新论文
-    category: 研究
-    summary: 论文类的快讯可以写它解决了什么问题、结论是什么，再加一句你自己的判断。
-    url: https://example.org/paper
-  - title: 【示例】某 AI 编程工具上线团队协作功能
-    category: 产品
-    summary: 没有封面图也没关系，大多数快讯只需要标题和摘要。
-    url: https://example.com/coding-tool
-  - title: 【示例】行业动态：某公司完成新一轮融资
+  - title: 美联航限制 AI 智能体代客订票
     category: 动态
-    url: https://example.net/funding
-  - title: 【示例】值得一读：一位工程师写的 Agent 落地复盘
+    summary: 美联航以数据安全和合规为由，限制未经授权的 AI 智能体访问其平台，担心出现未授权交易和里程被盗用。智能体替人办事，开始撞上平台方的门槛。
+    url: https://riorundown.substack.com/p/ai-news-nov-12-2026-ai-agents-infrastructure
+    source: 路透社报道，RIO Rundown 汇总
+  - title: Anthropic 称 Mythos 三天把 Claude 移植到 AMD GPU
+    category: 动态
+    summary: 说法出自 Anthropic 的投资者材料：模型自己写了几乎全部底层内核，Claude 现在能跑在四大芯片家族上。目前没有第三方验证，先当作一个信号看。
+    url: https://riorundown.substack.com/p/ai-news-nov-12-2026-ai-agents-infrastructure
+    source: The Decoder 报道，RIO Rundown 汇总
+  - title: AWS 放出一个由 AI 智能体写成的本地模拟器
+    category: 产品
+    summary: AWS Emulator 覆盖 200 多项服务，不需要 AWS 账号就能在本地跑。代码由三组分工明确的智能体完成：写测试、找问题、修问题。
+    url: https://riorundown.substack.com/p/ai-news-nov-12-2026-ai-agents-infrastructure
+    source: Unite.AI 报道，RIO Rundown 汇总
+  - title: MIT 做出更省数据的 AI 气候模拟器
+    category: 研究
+    summary: 新方法需要的训练数据更少，还能预测训练时没见过的情景，论文发表在 PNAS。
+    url: https://news.mit.edu/2026/new-research-could-lead-faster-trustworthy-ai-models-climate-prediction-1112
+    source: MIT News
+  - title: 助手、Copilot、智能体到底怎么分，各自什么时候用
     category: 文章
-    summary: 别人写的好文章放在「文章」分类下，自己的长文写到「深度」栏目里。
-    url: https://example.org/agent-retro
+    summary: 按「行为」而不是按名字来区分三类产品，适合正在选型的团队读一遍。
+    url: https://towardsdatascience.com/ai-assistant-vs-copilot-vs-agent-and-when-to-use-each
+    source: Towards Data Science

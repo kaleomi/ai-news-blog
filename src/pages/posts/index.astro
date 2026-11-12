@@ -8,7 +8,8 @@ const posts = await getPosts();
     <h1>深度</h1>
     <p>比快讯更长的文章：实践记录、观察和判断。</p>
   </div>
-  <ul class="post-list">
+  {posts.length === 0 && <p class="empty">还没有长文，第一篇正在写。</p>}
+  <ul class="post-list" hidden={posts.length === 0}>
     {posts.map((p) => (
       <li>
         <a href={`/posts/${p.id}/`}>
