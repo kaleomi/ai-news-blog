@@ -1,0 +1,9 @@
+items:
+  - title: 【示例】图像生成工具新增中文排版能力
+    category: 产品
+    summary: 示例内容。source 字段不填时，会自动显示链接的域名。
+    url: https://example.com/image
+    source: 官方博客
+  - title: 【示例】一份整理得很清楚的提示词写作指南
+    category: 文章
+    url: https://example.org/prompt-guide

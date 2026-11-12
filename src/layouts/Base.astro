@@ -1,0 +1,70 @@
+---
+import '../styles/global.css';
+import { SITE } from '../site';
+
+interface Props { title?: string; description?: string }
+const { title, description = SITE.description } = Astro.props;
+const fullTitle = title ? `${title} | ${SITE.name}` : SITE.name;
+const path = Astro.url.pathname;
+const nav = [
+  { label: '快讯', href: '/', on: path === '/' },
+  { label: '深度', href: '/posts/', on: path.startsWith('/posts') },
+  { label: '关于', href: '/about/', on: path.startsWith('/about') },
+];
+---
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title={SITE.name} href="/rss.xml" />
+    <script is:inline>
+      (function () {
+        var t = null;
+        try { t = localStorage.getItem('theme'); } catch (e) {}
+        if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+  </head>
+  <body>
+    <header class="top">
+      <div class="wrap">
+        <a class="brand" href="/">{SITE.name}</a>
+        <nav class="nav" aria-label="主导航">
+          {nav.map((n) => <a href={n.href} aria-current={n.on ? 'page' : undefined}>{n.label}</a>)}
+          {SITE.links.map((l) => <a href={l.href} target="_blank" rel="noopener">{l.label}</a>)}
+          <button class="theme" type="button" id="theme-toggle">深色</button>
+        </nav>
+      </div>
+    </header>
+    <main class="wrap"><slot /></main>
+    <footer class="foot">
+      <div class="wrap">
+        <span>© {new Date().getFullYear()} {SITE.author}</span>
+        <nav aria-label="页脚">
+          <a href="/rss.xml">RSS 订阅</a>
+          {SITE.socials.map((s) => <a href={s.href} target="_blank" rel="noopener">{s.label}</a>)}
+        </nav>
+      </div>
+    </footer>
+    <script is:inline>
+      (function () {
+        var btn = document.getElementById('theme-toggle');
+        var root = document.documentElement;
+        function label() { btn.textContent = root.dataset.theme === 'dark' ? '浅色' : '深色'; }
+        label();
+        btn.addEventListener('click', function () {
+          root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+          try { localStorage.setItem('theme', root.dataset.theme); } catch (e) {}
+          label();
+        });
+      })();
+    </script>
+  </body>
+</html>

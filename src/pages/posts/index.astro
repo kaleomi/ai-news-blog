@@ -1,0 +1,24 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getPosts, fmtDate } from '../../lib/data';
+const posts = await getPosts();
+---
+<Base title="深度" description="比快讯更长的文章：实践记录、观察和判断。">
+  <div class="page-title">
+    <h1>深度</h1>
+    <p>比快讯更长的文章：实践记录、观察和判断。</p>
+  </div>
+  <ul class="post-list">
+    {posts.map((p) => (
+      <li>
+        <a href={`/posts/${p.id}/`}>
+          <time datetime={p.data.date.toISOString()}>{fmtDate(p.data.date)}</time>
+          <div>
+            <h2>{p.data.title}</h2>
+            <p>{p.data.description}</p>
+          </div>
+        </a>
+      </li>
+    ))}
+  </ul>
+</Base>

@@ -1,0 +1,20 @@
+items:
+  - title: 【示例】某实验室发布新一代多模态模型
+    category: 产品
+    summary: 这是一条示例快讯。写一两句话说清楚：发生了什么、为什么值得关注。读者点标题会跳到原文。
+    url: https://example.com/new-model
+  - title: 【示例】一篇关于长上下文推理的新论文
+    category: 研究
+    summary: 论文类的快讯可以写它解决了什么问题、结论是什么，再加一句你自己的判断。
+    url: https://example.org/paper
+  - title: 【示例】某 AI 编程工具上线团队协作功能
+    category: 产品
+    summary: 没有封面图也没关系，大多数快讯只需要标题和摘要。
+    url: https://example.com/coding-tool
+  - title: 【示例】行业动态：某公司完成新一轮融资
+    category: 动态
+    url: https://example.net/funding
+  - title: 【示例】值得一读：一位工程师写的 Agent 落地复盘
+    category: 文章
+    summary: 别人写的好文章放在「文章」分类下，自己的长文写到「深度」栏目里。
+    url: https://example.org/agent-retro

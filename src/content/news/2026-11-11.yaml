@@ -1,0 +1,12 @@
+items:
+  - title: 【示例】开源社区放出一个可本地运行的语音模型
+    category: 产品
+    summary: 示例内容。把这个文件里的条目换成当天真实的资讯即可。
+    url: https://example.com/voice
+  - title: 【示例】某平台调整 API 价格
+    category: 动态
+    summary: 价格、额度、政策变化这类消息归到「动态」。
+    url: https://example.net/pricing
+  - title: 【示例】研究团队提出新的模型评测方法
+    category: 研究
+    url: https://example.org/eval

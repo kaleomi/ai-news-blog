@@ -1,0 +1,119 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE, CATEGORIES } from '../site';
+import { getDays, getPosts, dayParts, hostOf, fmtDate } from '../lib/data';
+
+const days = await getDays();
+const posts = (await getPosts()).slice(0, 2);
+const all = days.flatMap((d) => d.data.items);
+const count = (c: string) => all.filter((i) => i.category === c).length;
+const FIRST = 7; // 首屏显示几天，其余点「加载更多」
+---
+<Base>
+  <section class="lead">
+    <h1>{SITE.tagline}</h1>
+    <p>{SITE.description}</p>
+  </section>
+
+  <div class="tools" role="group" aria-label="按分类筛选">
+    <button class="chip" type="button" data-cat="" aria-pressed="true">全部<b>{all.length}</b></button>
+    {CATEGORIES.map((c) => (
+      <button class="chip" type="button" data-cat={c} aria-pressed="false">{c}<b>{count(c)}</b></button>
+    ))}
+    <input class="search" id="q" type="search" placeholder="搜索标题或摘要" aria-label="搜索快讯" />
+  </div>
+
+  {posts.length > 0 && (
+    <section class="featured" id="featured">
+      <header>
+        <h2>{SITE.author}的深度长文</h2>
+        <a href="/posts/">查看全部</a>
+      </header>
+      <div class="featured-grid">
+        {posts.map((p) => (
+          <a class="essay" href={`/posts/${p.id}/`}>
+            <h3>{p.data.title}</h3>
+            <p>{p.data.description}</p>
+            <time datetime={p.data.date.toISOString()}>{fmtDate(p.data.date)}</time>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <div id="feed">
+    {days.map((day, i) => {
+      const t = dayParts(day.id);
+      return (
+        <section class="day" data-late={i >= FIRST ? '' : undefined} hidden={i >= FIRST}>
+          <h2 class="day-head" style="margin:0;font-weight:400">
+            <span class="d">{t.d}</span>
+            <span class="m">{t.m}月 {t.week}</span>
+            <span class="n"><span data-n>{day.data.items.length}</span> 条</span>
+          </h2>
+          <ul class="items">
+            {day.data.items.map((it) => (
+              <li class="item" data-cat={it.category}>
+                <span class="cat" data-c={it.category}>{it.category}</span>
+                <div>
+                  <h3>
+                    {it.url
+                      ? <a href={it.url} target="_blank" rel="noopener">{it.title}</a>
+                      : it.title}
+                  </h3>
+                  {it.summary && <p>{it.summary}</p>}
+                  {(it.source || it.url) && <span class="src">{it.source || hostOf(it.url)}</span>}
+                  {it.image && <img src={it.image} alt="" loading="lazy" />}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      );
+    })}
+  </div>
+  <p class="empty" id="empty" hidden>没有符合条件的快讯。换个关键词，或者切回「全部」。</p>
+  {days.length > FIRST && <button class="chip more" type="button" id="more">加载更多</button>}
+</Base>
+
+<script>
+  const chips = [...document.querySelectorAll<HTMLButtonElement>('.chip[data-cat]')];
+  const q = document.querySelector<HTMLInputElement>('#q')!;
+  const days = [...document.querySelectorAll<HTMLElement>('.day')];
+  const empty = document.querySelector<HTMLElement>('#empty')!;
+  const more = document.querySelector<HTMLButtonElement>('#more');
+  const featured = document.querySelector<HTMLElement>('#featured');
+  let cat = '';
+  let expanded = false;
+
+  function apply() {
+    const kw = q.value.trim().toLowerCase();
+    const filtering = cat !== '' || kw !== '';
+    let total = 0;
+    for (const day of days) {
+      let n = 0;
+      for (const it of day.querySelectorAll<HTMLElement>('.item')) {
+        const ok = (!cat || it.dataset.cat === cat) && (!kw || it.textContent!.toLowerCase().includes(kw));
+        it.hidden = !ok;
+        if (ok) n++;
+      }
+      day.querySelector('[data-n]')!.textContent = String(n);
+      // 筛选时在全部日期里找；不筛选时只显示最近几天
+      day.hidden = n === 0 || (!filtering && !expanded && day.hasAttribute('data-late'));
+      total += n;
+    }
+    empty.hidden = total > 0;
+    if (more) more.hidden = filtering || expanded;
+    if (featured) featured.hidden = filtering;
+  }
+
+  for (const c of chips) {
+    c.addEventListener('click', () => {
+      cat = c.dataset.cat!;
+      for (const o of chips) o.setAttribute('aria-pressed', String(o === c));
+      apply();
+    });
+  }
+  q.addEventListener('input', apply);
+  more?.addEventListener('click', () => { expanded = true; apply(); });
+</script>
