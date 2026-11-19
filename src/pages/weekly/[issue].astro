@@ -1,0 +1,21 @@
+---
+import Base from '../../layouts/Base.astro';
+import Issue from '../../components/Issue.astro';
+import { getIssues, issueUrl } from '../../lib/data';
+
+export async function getStaticPaths() {
+  const issues = await getIssues();
+  return issues.map((entry, i) => ({
+    params: { issue: String(entry.data.issue) },
+    props: { entry, newer: issues[i - 1], older: issues[i + 1] },
+  }));
+}
+const { entry, newer, older } = Astro.props;
+---
+<Base title={`第 ${entry.data.issue} 期：${entry.data.title}`} description={entry.data.title}>
+  <Issue entry={entry} />
+  <nav class="pager" aria-label="翻页">
+    {older ? <a href={issueUrl(older.data.issue)}>上一期：{older.data.title}</a> : <span></span>}
+    {newer ? <a href={issueUrl(newer.data.issue)}>下一期：{newer.data.title}</a> : <a href="/weekly/">全部往期</a>}
+  </nav>
+</Base>

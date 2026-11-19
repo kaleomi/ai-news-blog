@@ -1,0 +1,20 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { issueUrl, fmtRange } from '../lib/data';
+
+interface Props { issues: CollectionEntry<'weekly'>[] }
+const { issues } = Astro.props;
+---
+<ul class="issue-list">
+  {issues.map((w) => (
+    <li>
+      <a href={issueUrl(w.data.issue)}>
+        <span class="il-num">第 {w.data.issue} 期</span>
+        <span class="il-body">
+          <strong>{w.data.title}</strong>
+          <span>{fmtRange(w.data.from, w.data.to)}，{w.data.items.length} 条</span>
+        </span>
+      </a>
+    </li>
+  ))}
+</ul>

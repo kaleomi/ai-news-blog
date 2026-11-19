@@ -1,0 +1,13 @@
+---
+import Base from '../../layouts/Base.astro';
+import IssueList from '../../components/IssueList.astro';
+import { getIssues } from '../../lib/data';
+const issues = await getIssues();
+---
+<Base title="往期" description="所有周报，按期数倒序。">
+  <div class="page-title">
+    <h1>往期</h1>
+    <p>每周一期，共 {issues.length} 期。</p>
+  </div>
+  <IssueList issues={issues} />
+</Base>

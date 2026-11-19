@@ -1,0 +1,67 @@
+---
+import { render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import { hostOf, fmtDay, fmtRange } from '../lib/data';
+
+interface Props { entry: CollectionEntry<'weekly'> }
+const { entry } = Astro.props;
+const { issue, title, from, to, items } = entry.data;
+const { Content } = await render(entry);
+
+const featured = items.filter((i) => i.featured);
+const ORDER = ['产品', '研究', '动态', '文章'] as const;
+const groups = ORDER
+  .map((c) => ({ name: c, list: items.filter((i) => !i.featured && i.category === c) }))
+  .filter((g) => g.list.length > 0);
+
+const meta = (it: (typeof items)[number]) =>
+  [it.date ? fmtDay(it.date) : '', it.source || hostOf(it.url)].filter(Boolean).join('，');
+---
+<article class="issue">
+  <header class="row issue-head">
+    <div class="rail">
+      <span class="num">{issue}</span>
+      <span class="rail-sub">第 {issue} 期</span>
+    </div>
+    <div>
+      <p class="range"><time datetime={from.toISOString().slice(0, 10)}>{fmtRange(from, to)}</time>，共 {items.length} 条</p>
+      <h1>{title}</h1>
+      <div class="prose note"><Content /></div>
+    </div>
+  </header>
+
+  {featured.length > 0 && (
+    <section class="row block">
+      <h2 class="rail rail-title">本周重点</h2>
+      <ul class="items">
+        {featured.map((it) => (
+          <li class="item item-top">
+            <span class="cat" data-c={it.category}>{it.category}</span>
+            <div>
+              <h3>{it.url ? <a href={it.url} target="_blank" rel="noopener">{it.title}</a> : it.title}</h3>
+              {it.summary && <p>{it.summary}</p>}
+              <span class="src">{meta(it)}</span>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+  {groups.map((g) => (
+    <section class="row block">
+      <h2 class="rail rail-title"><span class="cat-name" data-c={g.name}>{g.name}</span><span class="rail-sub">{g.list.length} 条</span></h2>
+      <ul class="items">
+        {g.list.map((it) => (
+          <li class="item">
+            <div>
+              <h3>{it.url ? <a href={it.url} target="_blank" rel="noopener">{it.title}</a> : it.title}</h3>
+              {it.summary && <p>{it.summary}</p>}
+              <span class="src">{meta(it)}</span>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+</article>

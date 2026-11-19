@@ -2,8 +2,8 @@
 export const SITE = {
   name: '夏洛熙的 AI 资讯',
   author: '夏洛熙',
-  tagline: '每天读完这一页，就跟上了 AI',
-  description: '模型、产品、论文和值得一读的文章，按天整理。',
+  tagline: '每周一期，读完就跟上了 AI',
+  description: '每周整理一次：新模型、新产品、论文和值得读的文章。',
   // 导航栏右侧的外链，不需要就留空数组
   links: [] as { label: string; href: string }[],
   // 页脚的社交链接

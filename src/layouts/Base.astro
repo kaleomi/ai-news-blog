@@ -7,7 +7,8 @@ const { title, description = SITE.description } = Astro.props;
 const fullTitle = title ? `${title} | ${SITE.name}` : SITE.name;
 const path = Astro.url.pathname;
 const nav = [
-  { label: '快讯', href: '/', on: path === '/' },
+  { label: '本期', href: '/', on: path === '/' },
+  { label: '往期', href: '/weekly/', on: path.startsWith('/weekly') },
   { label: '深度', href: '/posts/', on: path.startsWith('/posts') },
   { label: '关于', href: '/about/', on: path.startsWith('/about') },
 ];

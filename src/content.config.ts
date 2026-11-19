@@ -1,18 +1,25 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
-// 快讯：每天一个文件，文件名就是日期，例如 2026-11-12.yaml
-const news = defineCollection({
-  loader: glob({ pattern: '*.yaml', base: './src/content/news' }),
+// 周报：每期一个 Markdown 文件，例如 003.md
+// 开头写本期信息和条目，正文写「本周观察」
+const weekly = defineCollection({
+  loader: glob({ pattern: '*.md', base: './src/content/weekly' }),
   schema: z.object({
+    issue: z.number().int().positive(),
+    title: z.string(),
+    from: z.coerce.date(),
+    to: z.coerce.date(),
+    draft: z.boolean().default(false),
     items: z.array(
       z.object({
         title: z.string(),
         category: z.enum(['研究', '产品', '动态', '文章']),
+        featured: z.boolean().default(false),
+        date: z.coerce.date().optional(),
         summary: z.string().optional(),
         url: z.string().url().optional(),
         source: z.string().optional(),
-        image: z.string().optional(),
       }),
     ),
   }),
@@ -29,4 +36,4 @@ const posts = defineCollection({
   }),
 });
 
-export const collections = { news, posts };
+export const collections = { weekly, posts };

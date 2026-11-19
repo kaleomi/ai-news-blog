@@ -1,12 +1,5 @@
 import { getCollection } from 'astro:content';
 
-const WEEK = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
-
-export function dayParts(id: string) {
-  const [y, m, d] = id.split('-').map(Number);
-  return { y, m, d, week: WEEK[new Date(Date.UTC(y, m - 1, d)).getUTCDay()] };
-}
-
 export function hostOf(url?: string) {
   if (!url) return '';
   try {
@@ -16,11 +9,9 @@ export function hostOf(url?: string) {
   }
 }
 
-export async function getDays() {
-  const days = await getCollection('news');
-  return days
-    .filter((d) => /^\d{4}-\d{2}-\d{2}$/.test(d.id))
-    .sort((a, b) => (a.id < b.id ? 1 : -1));
+export async function getIssues() {
+  const issues = await getCollection('weekly', (w) => !w.data.draft);
+  return issues.sort((a, b) => b.data.issue - a.data.issue);
 }
 
 export async function getPosts() {
@@ -28,6 +19,18 @@ export async function getPosts() {
   return posts.sort((a, b) => +b.data.date - +a.data.date);
 }
 
+export const issueUrl = (n: number) => `/weekly/${n}/`;
+
 export function fmtDate(d: Date) {
   return `${d.getUTCFullYear()}年${d.getUTCMonth() + 1}月${d.getUTCDate()}日`;
+}
+
+export function fmtDay(d: Date) {
+  return `${d.getUTCMonth() + 1}月${d.getUTCDate()}日`;
+}
+
+// 11月12日至19日 / 10月30日至11月5日
+export function fmtRange(from: Date, to: Date) {
+  const sameMonth = from.getUTCMonth() === to.getUTCMonth();
+  return `${fmtDay(from)}至${sameMonth ? `${to.getUTCDate()}日` : fmtDay(to)}`;
 }
