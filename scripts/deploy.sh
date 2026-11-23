@@ -9,7 +9,7 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.."
-SITE_URL="${SITE_URL:-https://www.xialuoxi.com}"
+SITE_URL="${SITE_URL:-https://www.xialuoxi.top}"
 
 npm ci
 npm run build -- --site="$SITE_URL"

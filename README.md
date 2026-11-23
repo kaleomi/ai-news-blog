@@ -57,7 +57,7 @@ date: 2026-11-26
 
 ## 更新 Ubuntu 服务器
 
-正式地址为 `https://www.xialuoxi.com`。已有 Nginx 和 HTTPS 配置的服务器，可在拉取源码后执行：
+正式地址为 `https://www.xialuoxi.top`。已有 Nginx 和 HTTPS 配置的服务器，可在拉取源码后执行：
 
 ```bash
 cd /opt/ai-news-blog-source
@@ -74,3 +74,14 @@ git stash push -m before-ui-update -- src/site.ts
 git pull --ff-only
 sudo bash scripts/deploy.sh
 ```
+
+## 绑定正式域名与 HTTPS
+
+将 `www.xialuoxi.top` 的 A 记录指向服务器公网 IP `47.97.184.168`，安全组放行 TCP 80、443。
+然后执行以下脚本，为新域名添加独立的 Nginx 站点并申请证书（按提示输入联系邮箱）：
+
+```bash
+sudo bash scripts/bind-domain.sh
+```
+
+此脚本不删除或覆盖旧域名的站点配置；新域名使用独立的证书。绑定完成后访问 `https://www.xialuoxi.top`。
