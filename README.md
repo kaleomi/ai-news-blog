@@ -1,6 +1,6 @@
-# 夏洛熙的 AI 资讯
+# 夏洛熙的学习笔记
 
-一份 AI 周报：每周一期，外加深度长文。基于 Astro，部署到 Cloudflare Pages。
+一份个人学习记录：每周整理人工智能领域的阅读与思考，外加深度长文。基于 Astro，支持 Cloudflare Pages 或服务器 Nginx 静态部署。
 
 ## 本地预览
 
@@ -54,3 +54,23 @@ date: 2026-11-26
 
 - 构建命令：`npm run build`
 - 输出目录：`dist`
+
+## 更新 Ubuntu 服务器
+
+正式地址为 `https://www.xialuoxi.com`。已有 Nginx 和 HTTPS 配置的服务器，可在拉取源码后执行：
+
+```bash
+cd /opt/ai-news-blog-source
+git pull --ff-only
+sudo bash scripts/deploy.sh
+```
+
+部署脚本会安装锁定的依赖、构建并更新 `/var/www/ai-news-blog/` 下的静态文件，不改动 Nginx 域名和证书配置。服务器需要先安装 Node.js 24 和 Nginx。默认正式地址可以用 `SITE_URL` 环境变量覆盖。
+
+如果之前按部署说明在服务器手工修改过 `src/site.ts`，先保存这份修改，再拉取（修改会保留在 Git stash 中，不自动恢复旧名称）：
+
+```bash
+git stash push -m before-ui-update -- src/site.ts
+git pull --ff-only
+sudo bash scripts/deploy.sh
+```

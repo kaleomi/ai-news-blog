@@ -6,10 +6,11 @@ interface Props { title?: string; description?: string }
 const { title, description = SITE.description } = Astro.props;
 const fullTitle = title ? `${title} | ${SITE.name}` : SITE.name;
 const path = Astro.url.pathname;
+const canonical = Astro.site ? new URL(path, Astro.site) : undefined;
 const nav = [
-  { label: '本期', href: '/', on: path === '/' },
-  { label: '往期', href: '/weekly/', on: path.startsWith('/weekly') },
-  { label: '深度', href: '/posts/', on: path.startsWith('/posts') },
+  { label: '首页', href: '/', on: path === '/' },
+  { label: '往期笔记', href: '/weekly/', on: path.startsWith('/weekly') },
+  { label: '长文', href: '/posts/', on: path.startsWith('/posts') },
   { label: '关于', href: '/about/', on: path.startsWith('/about') },
 ];
 ---
@@ -22,6 +23,10 @@ const nav = [
     <meta name="description" content={description} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    {canonical && <link rel="canonical" href={canonical} />}
+    {canonical && <meta property="og:url" content={canonical} />}
+    <meta name="theme-color" content="#176b56" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="alternate" type="application/rss+xml" title={SITE.name} href="/rss.xml" />
     <script is:inline>
@@ -34,20 +39,26 @@ const nav = [
     </script>
   </head>
   <body>
+    <a class="skip-link" href="#main-content">跳到正文</a>
     <header class="top">
       <div class="wrap">
-        <a class="brand" href="/">{SITE.name}</a>
+        <a class="brand" href="/" aria-label={`${SITE.name}，返回首页`}>
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.5C9 4.5 5.5 4.5 3 5.5v14c2.5-1 6-1 9 1 3-2 6.5-2 9-1v-14c-2.5-1-6-1-9 1Z"/><path d="M12 6.5v14M6 9h3M6 12h3M15 9h3M15 12h3"/></svg>
+          </span>
+          <span>{SITE.name}<small>XIALUOXI · LEARNING NOTES</small></span>
+        </a>
         <nav class="nav" aria-label="主导航">
           {nav.map((n) => <a href={n.href} aria-current={n.on ? 'page' : undefined}>{n.label}</a>)}
           {SITE.links.map((l) => <a href={l.href} target="_blank" rel="noopener">{l.label}</a>)}
-          <button class="theme" type="button" id="theme-toggle">深色</button>
         </nav>
+        <button class="theme" type="button" id="theme-toggle" aria-label="切换深色模式" aria-pressed="false">深色</button>
       </div>
     </header>
-    <main class="wrap"><slot /></main>
+    <main class="wrap" id="main-content"><slot /></main>
     <footer class="foot">
       <div class="wrap">
-        <span>© {new Date().getFullYear()} {SITE.author}</span>
+        <div><span class="footer-name">{SITE.name}</span><p>© {new Date().getFullYear()} {SITE.author} · {SITE.tagline}</p></div>
         <nav aria-label="页脚">
           <a href="/rss.xml">RSS 订阅</a>
           {SITE.socials.map((s) => <a href={s.href} target="_blank" rel="noopener">{s.label}</a>)}
@@ -58,7 +69,13 @@ const nav = [
       (function () {
         var btn = document.getElementById('theme-toggle');
         var root = document.documentElement;
-        function label() { btn.textContent = root.dataset.theme === 'dark' ? '浅色' : '深色'; }
+        if (!btn) return;
+        function label() {
+          var dark = root.dataset.theme === 'dark';
+          btn.textContent = dark ? '浅色' : '深色';
+          btn.setAttribute('aria-label', dark ? '切换浅色模式' : '切换深色模式');
+          btn.setAttribute('aria-pressed', String(dark));
+        }
         label();
         btn.addEventListener('click', function () {
           root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';

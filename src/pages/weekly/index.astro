@@ -4,10 +4,11 @@ import IssueList from '../../components/IssueList.astro';
 import { getIssues } from '../../lib/data';
 const issues = await getIssues();
 ---
-<Base title="往期" description="所有周报，按期数倒序。">
+<Base title="往期笔记" description="把每周的阅读与思考，整理成可以回看的学习笔记。">
   <div class="page-title">
-    <h1>往期</h1>
-    <p>每周一期，共 {issues.length} 期。</p>
+    <p class="eyebrow">THE ARCHIVE</p>
+    <h1>翻一翻，过去的笔记</h1>
+    <p>每周留下一页，记录理解世界的过程。这里共有 {issues.length} 期。</p>
   </div>
   <IssueList issues={issues} />
 </Base>

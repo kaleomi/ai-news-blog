@@ -2,18 +2,44 @@
 import Base from '../layouts/Base.astro';
 import Issue from '../components/Issue.astro';
 import IssueList from '../components/IssueList.astro';
-import { getIssues } from '../lib/data';
+import { getIssues, fmtRange } from '../lib/data';
+import { SITE } from '../site';
 
 const [latest, ...past] = await getIssues();
 ---
-<Base description={latest ? `第 ${latest.data.issue} 期：${latest.data.title}` : undefined}>
+<Base>
+  <section class="home-hero" aria-labelledby="home-title">
+    <div class="hero-copy">
+      <p class="eyebrow">一份持续生长的个人学习记录</p>
+      <h1 id="home-title">保持好奇，<br /><em>认真记录。</em></h1>
+      <p class="hero-description">我是{SITE.author}，在这里整理关于人工智能的新发现。<br class="desktop-break" />把读到的、想到的，慢慢写成自己的理解。</p>
+      <div class="hero-actions">
+        <a class="button button-primary" href={latest ? '#latest' : '/weekly/'}>阅读最新笔记</a>
+        <a class="button button-quiet" href="/about/">认识一下</a>
+      </div>
+      <p class="hero-caption">不追赶每一个热点，只留下值得回看的内容。</p>
+    </div>
+    {latest && (
+      <aside class="latest-note" aria-label="最新一期概览">
+        <div class="note-topline"><span class="eyebrow">这周的笔记</span><span class="note-number">第 {latest.data.issue} 期</span></div>
+        <div class="note-symbol" aria-hidden="true">
+          <svg viewBox="0 0 64 64" width="64" height="64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 9h28a4 4 0 0 1 4 4v42H19a5 5 0 0 1-5-5V13a4 4 0 0 1 4-4Z"/><path d="M20 9v37M14 50a4 4 0 0 1 4-4h32M28 22h14M28 28h10M39 9v9l4-2 4 2V9"/></svg>
+        </div>
+        <h2><a href="#latest">{latest.data.title}</a></h2>
+        <p class="note-date">{fmtRange(latest.data.from, latest.data.to)}</p>
+        <div class="note-bottom"><span>{latest.data.items.length} 条阅读记录</span><a href="/rss.xml">通过 RSS 订阅</a></div>
+      </aside>
+    )}
+  </section>
+
+  <div class="section-heading" id="latest"><div><p class="eyebrow">LATEST NOTES</p><h2>最近在读与思考</h2></div><a class="text-link" href="/weekly/">查看全部笔记</a></div>
   {latest
-    ? <Issue entry={latest} />
-    : <p class="empty">第一期周报正在整理。</p>}
+    ? <Issue entry={latest} headingLevel={2} />
+    : <p class="empty">第一篇笔记正在整理，过些时候再来看看。</p>}
 
   {past.length > 0 && (
     <section class="row block">
-      <h2 class="rail rail-title">往期</h2>
+      <h2 class="rail rail-title">继续翻阅<span class="rail-sub">往期笔记</span></h2>
       <IssueList issues={past} />
     </section>
   )}

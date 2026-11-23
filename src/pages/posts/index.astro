@@ -3,10 +3,11 @@ import Base from '../../layouts/Base.astro';
 import { getPosts, fmtDate } from '../../lib/data';
 const posts = await getPosts();
 ---
-<Base title="深度" description="比快讯更长的文章：实践记录、观察和判断。">
+<Base title="长文" description="留一点时间，写下更完整的实践记录与个人思考。">
   <div class="page-title">
-    <h1>深度</h1>
-    <p>比快讯更长的文章：实践记录、观察和判断。</p>
+    <p class="eyebrow">THINKING IN LONG FORM</p>
+    <h1>把思考写得再深一点</h1>
+    <p>不止是一条记录，也是一次实践、观察与理解。</p>
   </div>
   {posts.length === 0 && <p class="empty">还没有长文，第一篇正在写。</p>}
   <ul class="post-list" hidden={posts.length === 0}>

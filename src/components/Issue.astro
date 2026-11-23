@@ -3,8 +3,9 @@ import { render } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import { hostOf, fmtDay, fmtRange } from '../lib/data';
 
-interface Props { entry: CollectionEntry<'weekly'> }
-const { entry } = Astro.props;
+interface Props { entry: CollectionEntry<'weekly'>; headingLevel?: 1 | 2 }
+const { entry, headingLevel = 1 } = Astro.props;
+const Heading = headingLevel === 1 ? 'h1' : 'h2';
 const { issue, title, from, to, items } = entry.data;
 const { Content } = await render(entry);
 
@@ -13,6 +14,7 @@ const ORDER = ['产品', '研究', '动态', '文章'] as const;
 const groups = ORDER
   .map((c) => ({ name: c, list: items.filter((i) => !i.featured && i.category === c) }))
   .filter((g) => g.list.length > 0);
+const categoryIds = { 产品: 'product', 研究: 'research', 动态: 'news', 文章: 'article' };
 
 const meta = (it: (typeof items)[number]) =>
   [it.date ? fmtDay(it.date) : '', it.source || hostOf(it.url)].filter(Boolean).join('，');
@@ -25,15 +27,19 @@ const meta = (it: (typeof items)[number]) =>
     </div>
     <div>
       <p class="range"><time datetime={from.toISOString().slice(0, 10)}>{fmtRange(from, to)}</time>，共 {items.length} 条</p>
-      <h1>{title}</h1>
+      <Heading class="issue-title">{title}</Heading>
       <div class="prose note"><Content /></div>
+      <nav class="issue-jumps" aria-label="本期内容分类">
+        {featured.length > 0 && <a href={`#issue-${issue}-featured`}>本周重点 <span>{featured.length}</span></a>}
+        {groups.map((g) => <a href={`#issue-${issue}-${categoryIds[g.name]}`}>{g.name} <span>{g.list.length}</span></a>)}
+      </nav>
     </div>
   </header>
 
   {featured.length > 0 && (
-    <section class="row block">
-      <h2 class="rail rail-title">本周重点</h2>
-      <ul class="items">
+    <section class="row block" id={`issue-${issue}-featured`}>
+      <h2 class="rail rail-title">本周重点<span class="rail-sub">值得多看一眼</span></h2>
+      <ul class="items featured-items">
         {featured.map((it) => (
           <li class="item item-top">
             <span class="cat" data-c={it.category}>{it.category}</span>
@@ -49,7 +55,7 @@ const meta = (it: (typeof items)[number]) =>
   )}
 
   {groups.map((g) => (
-    <section class="row block">
+    <section class="row block" id={`issue-${issue}-${categoryIds[g.name]}`}>
       <h2 class="rail rail-title"><span class="cat-name" data-c={g.name}>{g.name}</span><span class="rail-sub">{g.list.length} 条</span></h2>
       <ul class="items">
         {g.list.map((it) => (
